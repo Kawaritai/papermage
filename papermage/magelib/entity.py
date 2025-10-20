@@ -92,26 +92,6 @@ class Entity:
             raise AttributeError("This Entity is missing a Document")
         self._id = id
 
-    def __getattr__(self, name: str) -> List["Entity"]:
-        """This Overloading is convenient syntax since the `entity.layer` operation is intuitive for folks."""
-        # add method deprecation warning
-        logger = logging.getLogger(__name__)
-        logger.warning(
-            "Entity.__getattr__ is deprecated due to ambiguity and will be removed in a future release."
-            "Please use Entity.intersect_by_span or Entity.intersect_by_box instead."
-        )
-        try:
-            if len(self.spans) > 0:
-                intersection = self.intersect_by_span(name=name)
-                if len(intersection) == 0 and len(self.boxes) > 0:
-                    intersection = self.intersect_by_box(name=name)
-                return intersection
-            else:
-                return self.intersect_by_box(name=name)
-        except ValueError:
-            # maybe users just want some attribute of the Entity object
-            return self.__getattribute__(name)
-
     def intersect_by_span(self, name: str) -> List["Entity"]:
         """This method allows you to access overlapping Entities
         within the Document based on Span"""
@@ -133,6 +113,28 @@ class Entity:
             raise ValueError("This Entity's Layer is not attached to a Document")
 
         return self.layer.doc.intersect_by_box(query=self, name=name)
+    
+    def within_span(self, name: str) -> List["Entity"]:
+        """Get entities that overlap this entity's text span.
+    
+    Args:
+        name: Layer name to query (e.g., 'words', 'sentences', 'tokens')
+        
+    Returns:
+        Entities from the specified layer overlapping this entity's character range.
+    """
+        return self.intersect_by_span(name)
+    
+    def within_box(self, name: str) -> List["Entity"]:
+        """Get entities that overlap this entity's bounding box.
+    
+    Args:
+        name: Layer name to query (e.g., 'words', 'sentences', 'tokens')
+        
+    Returns:
+        Entities from the specified layer overlapping this entity's spatial box.
+    """
+        return self.intersect_by_box(name)
 
     @property
     def start(self) -> Union[int, float]:
