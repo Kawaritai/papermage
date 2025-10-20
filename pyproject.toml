@@ -105,6 +105,11 @@ requires = [
 ]
 
 [project.optional-dependencies]
+demo = [
+    'jupyter',
+    'timm<=1.0.10',
+    'setuptools==66.1.1'
+]
 dev = [
     'pytest',
     'pytest-xdist',
