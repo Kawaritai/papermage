@@ -36,16 +36,17 @@ class Recipe:
 
     @abstractmethod
     def from_str(self, text: str) -> Document:
-        raise NotImplementedError
+
+        raise NotImplementedError(f"{self.__class__.__name__} must implement from_str() (or did you mean to load from a filepath?)")
 
     @abstractmethod
     def from_pdf(self, pdf: Path) -> Document:
-        raise NotImplementedError
+        raise NotImplementedError(f"{self.__class__.__name__} must implement from_pdf()")
 
     @abstractmethod
     def from_json(self, json: str) -> Document:
-        raise NotImplementedError
+        raise NotImplementedError(f"{self.__class__.__name__} must implement from_json()")
 
     @abstractmethod
     def from_doc(self, doc: Document) -> Document:
-        raise NotImplementedError
+        raise NotImplementedError(f"{self.__class__.__name__} must implement from_doc()")

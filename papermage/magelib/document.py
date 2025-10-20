@@ -189,8 +189,14 @@ class Document:
 
     def intersect_by_span(self, query: Entity, name: str) -> List[Entity]:
         """Finds all entities that intersect with the query"""
-        return self.get_layer(name=name).intersect_by_span(query=query)
+        layer = self.get_layer(name=name)
+        if not isinstance(layer, Layer):
+            raise TypeError(f"Invalid query, layer '{name}' is not a Layer instance")
+        return layer.intersect_by_span(query=query)
 
     def intersect_by_box(self, query: Entity, name: str) -> List[Entity]:
         """Finds all entities that intersect with the query"""
-        return self.get_layer(name=name).intersect_by_box(query=query)
+        layer = self.get_layer(name=name)
+        if not isinstance(layer, Layer):
+            raise TypeError(f"Invalid query, layer '{name}' is not a Layer instance")
+        return layer.intersect_by_box(query=query)
